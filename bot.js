@@ -67,6 +67,14 @@ bot.onText(/\/info/, (msg) => {
   );
 });
 
+bot.onText(/\/rules/, (msg) => {
+  bot.sendMessage(
+    msg.chat.id,
+    "*Global Rules*\n\n_1. Don't reveal personal information.\n2. Discuss in a civil manner.\n3. Do not post adult content._\n\n*Bot Rules*\n\n_The moderation team reserves the right to apply these rules accordingly in a fair and final manner._",
+    { reply_to_message_id: msg.message_id, parse_mode: "Markdown" }
+  );
+});
+
 // Messages
 
 bot.on("message", (msg) => {
@@ -90,9 +98,8 @@ bot.on("message", (msg) => {
     db.all("SELECT chatId FROM users", [], (err, rows) => {
       if (err) throw err;
       rows.forEach((row) => {
-        if (row.chatId !== msg.chat.id) {
-          bot.sendMessage(row.chatId, msg.text);
-        }
+        //if (row.chatId !== msg.chat.id) {
+        bot.sendMessage(row.chatId, msg.text);
       });
     });
   }
