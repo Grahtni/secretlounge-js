@@ -2,7 +2,7 @@
 
 A complete rewrite of the [secretlounge](https://github.com/secretlounge) project in NodeJS!
 
-Note that this is a work-in-progress (WIP) and a lot of major functionality is not implemented yet. As of right now replies, as well as any other media type other than photos are not supported. The karma scoring system is also not supported presently.
+Note that this is a work-in-progress (WIP) and a lot of major functionality is not implemented yet. As of right now replies, as well as any other media type except photos are not supported. The karma scoring and moderation system is also not supported presently.
 
 <br>
 
