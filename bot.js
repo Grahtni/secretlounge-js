@@ -62,7 +62,7 @@ bot.onText(/\/help/, (msg) => {
 bot.onText(/\/info/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    "_This is a Telegram anonymous chat bot. All messages sent here are anonymous. Just send a message to participate!_",
+    "_This is a Telegram anonymous chat. All messages sent here are anonymous. Just send a message to participate!_",
     { reply_to_message_id: msg.message_id, parse_mode: "Markdown" }
   );
 });
