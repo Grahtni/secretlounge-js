@@ -11,10 +11,11 @@ Note that this is a work-in-progress (WIP) and a lot of major functionality is n
 1. Clone git repo.
 2. Run ```npm i``` in project folder. This will install the required dependencies.
 3. Populate .env file with bot token.
+4. Add rules in rules.txt.
 
 #### Bot token can be obtained from @BotFather.
 
-4. Run ```node bot``` to start the bot.
+5. Run ```node bot``` to start the bot.
 
 #### It's advisable to run the bot using PM2 or any startup manager for persistent execution, as this ensures you won't have to have the terminal open. You can set up auto-start as well. Or pass a cron job.
 

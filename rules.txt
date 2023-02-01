@@ -6,7 +6,7 @@ _
 _
 *Bot Rules*
 _
-1. These are bot specific rules.
+1. Remain on topic.
 
 The moderation team reserves the right to apply these rules accordingly in a fair and final manner.
 _
