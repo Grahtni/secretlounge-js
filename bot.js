@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const db = new sqlite3.Database("users.db");
+fs = require("fs");
 
 db.serialize(function () {
   db.run(
@@ -68,11 +69,16 @@ bot.onText(/\/info/, (msg) => {
 });
 
 bot.onText(/\/rules/, (msg) => {
-  bot.sendMessage(
-    msg.chat.id,
-    "*Global Rules*\n\n_1. Don't reveal personal information.\n2. Discuss in a civil manner.\n3. Do not post adult content._\n\n*Bot Rules*\n\n_The moderation team reserves the right to apply these rules accordingly in a fair and final manner._",
-    { reply_to_message_id: msg.message_id, parse_mode: "Markdown" }
-  );
+  fs.readFile("rules.txt", "utf-8", (err, data) => {
+    if (err) {
+      bot.sendMessage(msg.chat.id, "Error reading rules file.");
+    } else {
+      bot.sendMessage(msg.chat.id, data, {
+        reply_to_message_id: msg.message_id,
+        parse_mode: "Markdown",
+      });
+    }
+  });
 });
 
 // Messages
