@@ -1,14 +1,15 @@
 const TelegramBot = require("node-telegram-bot-api");
 const sqlite3 = require("sqlite3").verbose();
 const dotenv = require("dotenv");
+fs = require("fs");
 dotenv.config();
+
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const db = new sqlite3.Database("users.db");
-fs = require("fs");
 
 db.serialize(function () {
   db.run(
-    "CREATE TABLE IF NOT EXISTS users (chatId INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, username TEXT, languageCode TEXT)"
+    "CREATE TABLE IF NOT EXISTS users ( chatId INTEGER, firstName TEXT, lastName TEXT, username TEXT, joinDate TEXT, leaveDate TEXT )"
   );
 });
 
@@ -22,24 +23,24 @@ bot.onText(/\/start/, (msg) => {
       if (err) throw err;
       if (!row) {
         db.run(
-          "INSERT INTO users (chatId, firstName, lastName, username, languageCode) VALUES (?, ?, ?, ?, ?)",
+          "INSERT INTO users (chatId, firstName, lastName, username, joinDate) VALUES (?, ?, ?, ?, datetime('now'))",
           [
             msg.chat.id,
             msg.from.first_name,
             msg.from.last_name,
             msg.from.username,
-            msg.from.language_code,
           ],
           function (err) {
             if (err) throw err;
-            bot.sendMessage(
-              msg.chat.id,
-              "*Welcome!* ✨ You've joined the chat.",
-              {
-                reply_to_message_id: msg.message_id,
-                parse_mode: "Markdown",
-              }
-            );
+          }
+        );
+        console.log("User", msg.chat.id, "has joined the chat.");
+        bot.sendMessage(
+          msg.chat.id,
+          "*Welcome!* ✨ _You've joined the chat._",
+          {
+            reply_to_message_id: msg.message_id,
+            parse_mode: "Markdown",
           }
         );
       } else {
@@ -52,10 +53,25 @@ bot.onText(/\/start/, (msg) => {
   );
 });
 
+bot.onText(/\/stop/, (msg) => {
+  db.run(
+    "UPDATE users SET leaveDate = datetime('now') WHERE chatId = ?",
+    [msg.chat.id],
+    (err) => {
+      if (err) throw err;
+    },
+    console.log("User", msg.chat.id, "has left the chat."),
+    bot.sendMessage(msg.chat.id, "_You've left the chat._", {
+      reply_to_message_id: msg.message_id,
+      parse_mode: "Markdown",
+    })
+  );
+});
+
 bot.onText(/\/help/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    "*Commands:*\n\n/start - _Start to receive messages_\n/help - _Show commands_\n/info - _Know more_",
+    "*Commands:*\n\n/start - _Start to receive messages_\n/stop - _Stop receiving messages_\n/help - _Show commands_\n/rules - _Show rules_\n\n_You can use /info to see user information._",
     { reply_to_message_id: msg.message_id, parse_mode: "Markdown" }
   );
 });
